@@ -33,6 +33,14 @@ getpath() {
 	)
 }
 
+CONFDIR=/etc
+if test -f "$CONFDIR"/abs.conf
+then
+	. "$CONFDIR"/abs.conf
+fi
+
+: ${SYNCSERVER:=rsync.archlinux.org}
+
 expac_args=()
 while test $# -gt 0
 do
@@ -62,7 +70,7 @@ do
 		continue
 	fi
 
-	rsync -rv rsync.archlinux.org::abs/"$path" .
+	rsync -rv "${SYNCSERVER}"::abs/"$path" .
 done
 
 exit 0

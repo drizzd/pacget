@@ -2,6 +2,8 @@
 #
 # Download PKGBUILD's from Arch Linux Package Management (ALPM) database.
 #
+# Copyright (c) 2012, Clemens Buchacher
+#
 
 usage() {
 	echo "$(basename $0) [[repository/]package ...]" >&2

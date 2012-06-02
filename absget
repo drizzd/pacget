@@ -1,0 +1,62 @@
+#!/bin/sh
+
+usage() {
+	echo $(basename $0) [[repository/]package ...] >&2
+}
+
+getpath() {
+	expac -S '%a %r/%n' "$@" |
+	(
+		if ! read arch path
+		then
+			echo "$i: No match." >&2
+			exit 1
+		fi
+		if read arch2 path2
+		then
+			echo "$i: Multiple matches."
+			echo "    $path"
+			echo "    $path2"
+			while read a p
+			do
+				echo "    $p"
+			done
+			exit 1
+		fi >&2
+		echo "$arch/$path"
+	)
+}
+
+expac_args=()
+while test $# -gt 0
+do
+	case "$1" in
+	-h)
+		usage
+		exit 1
+		;;
+	-s)
+		expac_args=($expac_args -s)
+		;;
+	*)
+		break
+		;;
+	esac
+	shift
+done
+
+for i in "$@"
+do
+	path=$(getpath "${expac_args[@]}" "$i") || continue
+
+	base=$(basename "$path")
+	if test -e "$base"
+	then
+		echo "$base: Already exists." >&2
+		continue
+	fi
+
+	rsync -rv rsync.archlinux.org::abs/"$path" .
+done
+
+exit 0

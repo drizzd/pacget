@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Download PKGBUILD's from Arch Linux Package Management (ALPM) database.
 #

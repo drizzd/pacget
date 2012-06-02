@@ -1,7 +1,8 @@
 #!/bin/sh
 
 usage() {
-	echo $(basename $0) [[repository/]package ...] >&2
+	echo "$(basename $0) [[repository/]package ...]" >&2
+	echo "$(basename $0) -s [package name | package description]" >&2
 }
 
 getpath() {

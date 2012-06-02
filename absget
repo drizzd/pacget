@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# Download PKGBUILD's from Arch Linux Package Management (ALPM) database.
+#
 
 usage() {
 	echo "$(basename $0) [[repository/]package ...]" >&2

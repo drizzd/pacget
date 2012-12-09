@@ -1,0 +1,27 @@
+#!/bin/bash
+
+AURURL='https://aur.archlinux.org'
+
+query()  # name : array
+{
+	field=$1
+	pkg=$2
+
+	j="$(curl -Gs --data-urlencode "arg=$pkg" "$AURURL/rpc.php?type=info")"
+	if [[ $(jshon -e resultcount <<< "$j") == 0 ]]; then 
+		echo "<none>"
+	else
+		jshon -e results -e "$field" -u <<< "$j"
+	fi
+}
+
+pacman -Qmq |
+while read pkg
+do
+	upstream=$(query Version "$pkg") || continue
+	installed=$(expac -Q '%v' "$pkg")
+	if test "$upstream" != "$installed"
+	then
+		printf "%s\t%s -> %s\n" "$pkg" "$installed" "$upstream"
+	fi
+done

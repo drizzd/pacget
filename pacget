@@ -4,6 +4,8 @@
 #
 # Copyright (c) 2012, Clemens Buchacher
 #
+# Depends on expac, rsync.
+#
 
 usage() {
 	echo "$(basename $0) [[repository/]package ...]" >&2
@@ -29,7 +31,7 @@ getpath() {
 			done
 			exit 1
 		fi >&2
-		echo "$arch/$path"
+		echo "$arch $path"
 	)
 }
 
@@ -61,7 +63,9 @@ done
 
 for i in "$@"
 do
-	path=$(getpath "${expac_args[@]}" "$i") || continue
+	arch_path=$(getpath "${expac_args[@]}" "$i") || continue
+	arch=$(echo "$arch_path" | cut -f1 -d' ')
+	path=$(echo "$arch_path" | cut -f2 -d' ')
 
 	base=$(basename "$path")
 	if test -e "$base"
@@ -70,7 +74,7 @@ do
 		continue
 	fi
 
-	rsync -rv "${SYNCSERVER}"::abs/"$path" .
+	rsync -rv "${SYNCSERVER}"::abs/{$arch,any}/"$path" .
 done
 
 exit 0

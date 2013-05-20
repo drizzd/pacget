@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -e
+
+AURURL='https://aur.archlinux.org'
+
+usage() {
+	echo "$(basename $0) package" >&2
+	exit 1
+}
+
+query()  # name : array
+{
+	field=$1
+	pkg=$2
+
+	j="$(curl -Gs --data-urlencode "arg=$pkg" "$AURURL/rpc.php?type=info")"
+	if [[ $(jshon -e resultcount <<< "$j") != 0 ]]; then 
+		jshon -e results -e "$field" -u <<< "$j"
+	fi
+}
+
+if test $# -ne 1
+then
+	usage
+fi
+
+path=$(query URLPath "$1")
+archive=$(mktemp)
+wget -q "${AURURL}${path}" -O "$archive"
+tar tzf "$archive" | cut -f1 -d/ | uniq |
+while read dir
+do
+	if test -e "$dir"
+	then
+		echo "Cannot overwrite existing directory: $dir" >&2
+		exit 2
+	fi
+done
+tar xzf "$archive"
+rm -f "$archive"

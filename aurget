@@ -15,9 +15,13 @@ query()  # name : array
 	pkg=$2
 
 	j="$(curl -Gs --data-urlencode "arg=$pkg" "$AURURL/rpc.php?type=info")"
-	if [[ $(jshon -e resultcount <<< "$j") != 0 ]]; then 
-		jshon -e results -e "$field" -u <<< "$j"
+	if test "$(jshon -e resultcount <<< "$j")" -ne 1
+	then
+		echo "Not found: $pkg" >&2
+		return 2
 	fi
+
+	jshon -e results -e "$field" -u <<< "$j"
 }
 
 if test $# -ne 1

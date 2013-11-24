@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# Copyright (c) 2012, Clemens Buchacher <drizzd@aon.at>
+#
+# The code in query() is originally from packer, if I recall correctly.
+#
+# Depends on curl, jshon.
+#
 
 set -e
 

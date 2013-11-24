@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Copyright (c) 2012, Clemens Buchacher <drizzd@aon.at>
+#
+# List installed outdated AUR package.
+#
 
 AURURL='https://aur.archlinux.org'
 

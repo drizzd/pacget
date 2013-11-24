@@ -38,7 +38,7 @@ fi
 
 path=$(query URLPath "$1")
 archive=$(mktemp)
-wget -q "${AURURL}${path}" -O "$archive"
+curl -Gs "${AURURL}${path}" >"$archive"
 tar tzf "$archive" | cut -f1 -d/ | uniq |
 while read dir
 do

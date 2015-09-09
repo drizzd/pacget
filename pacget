@@ -74,7 +74,12 @@ do
 		continue
 	fi
 
-	rsync -rv "${SYNCSERVER}"::abs/{$arch,any}/"$path" .
+	rsync -rv --ignore-missing-args "${SYNCSERVER}"::abs/{$arch,any}/"$path" . || exit 1
+	if ! test -d "$base"
+	then
+		echo "error: Expected directory does not exist: $base" >&2
+		exit 1
+	fi
 done
 
 exit 0
